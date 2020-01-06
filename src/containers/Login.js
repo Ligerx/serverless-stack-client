@@ -24,7 +24,7 @@ export default function Login(props) {
     try {
       await Auth.signIn(fields.email, fields.password);
       props.userHasAuthenticated(true);
-      props.history.push("/");
+      // redirect happens as a side effect of a parent route component
     } catch (e) {
       alert(e.message);
       setIsLoading(false);
