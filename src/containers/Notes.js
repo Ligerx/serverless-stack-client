@@ -1,13 +1,13 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { API, Storage } from "aws-amplify";
-import { FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import { FormGroup, FormControl, ControlLabel, Image } from "react-bootstrap";
 import LoaderButton from "../components/LoaderButton";
 import { s3Upload } from "../libs/awsLib";
 import config from "../config";
 import "./Notes.css";
 
 export default function Notes(props) {
-  const file = useRef(null);
+  const [file, setFile] = useState(null);
   const [note, setNote] = useState(null);
   const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -46,7 +46,7 @@ export default function Notes(props) {
   }
   
   function handleFileChange(event) {
-    file.current = event.target.files[0];
+    setFile(event.target.files[0]);
   }
   
   function saveNote(note) {
@@ -64,7 +64,7 @@ export default function Notes(props) {
   
     event.preventDefault();
   
-    if (file.current && file.current.size > config.MAX_ATTACHMENT_SIZE) {
+    if (file && file.size > config.MAX_ATTACHMENT_SIZE) {
       alert(
         `Please pick a file smaller than ${config.MAX_ATTACHMENT_SIZE /
           1000000} MB.`
@@ -75,8 +75,8 @@ export default function Notes(props) {
     setIsLoading(true);
   
     try {
-      if (file.current) {
-        attachment = await s3Upload(file.current);
+      if (file != null) {
+        attachment = await s3Upload(file);
         await removeAttachment(note.attachment);
       }
   
@@ -148,6 +148,10 @@ export default function Notes(props) {
             {!note.attachment && <ControlLabel>Attachment</ControlLabel>}
             <FormControl onChange={handleFileChange} type="file" />
           </FormGroup>
+
+          { note && note.attachmentURL &&
+            <Image src={note.attachmentURL} style={{ paddingBottom: 16, maxHeight: 600, maxWidth: 600 }} />}
+
           <LoaderButton
             block
             type="submit"
@@ -171,5 +175,4 @@ export default function Notes(props) {
       )}
     </div>
   );
-  
 }
