@@ -5,6 +5,9 @@ import LoaderButton from "../components/LoaderButton";
 import { useFormFields } from "../libs/hooksLib";
 import "./Login.css";
 
+const dummyEmail = 'admin@example.com';
+const dummyPassword = 'Passw0rd!';
+
 export default function Login(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [fields, handleFieldChange] = useFormFields({
@@ -16,13 +19,21 @@ export default function Login(props) {
     return fields.email.length > 0 && fields.password.length > 0;
   }
 
-  async function handleSubmit(event) {
+  function handleLogin(event) {
     event.preventDefault();
+    handleSubmit(fields.email, fields.password);
+  }
 
+  function handleDummyAccountLogin(event) {
+    event.preventDefault();
+    handleSubmit(dummyEmail, dummyPassword);
+  }
+
+  async function handleSubmit(email, password) {
     setIsLoading(true);
 
     try {
-      await Auth.signIn(fields.email, fields.password);
+      await Auth.signIn(email, password);
       props.userHasAuthenticated(true);
       // redirect happens as a side effect of a parent route component
     } catch (e) {
@@ -33,7 +44,7 @@ export default function Login(props) {
 
   return (
     <div className="Login">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleLogin}>
         <FormGroup controlId="email" bsSize="large">
           <ControlLabel>Email</ControlLabel>
           <FormControl
@@ -61,6 +72,18 @@ export default function Login(props) {
           Login
         </LoaderButton>
       </form>
+
+      <form onSubmit={handleDummyAccountLogin}>
+        <LoaderButton
+            block
+            type="submit"
+            bsSize="large"
+            isLoading={isLoading}
+            style={{ marginTop: 40 }}
+          >
+            Login with Dummy Account
+          </LoaderButton>
+        </form>
     </div>
   );
 }
