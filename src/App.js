@@ -5,6 +5,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { Auth } from "aws-amplify";
 import "./App.css";
 import Routes from "./Routes";
+import githubIcon from "./github-icon.png";
 
 function App(props) {
   const [isAuthenticating, setIsAuthenticating] = useState(true);
@@ -68,6 +69,17 @@ function App(props) {
         </Navbar.Collapse>
       </Navbar>
       <Routes appProps={{ isAuthenticated, userHasAuthenticated }} />
+
+      <div style={{
+        position: 'fixed',
+        bottom: 24,
+        right: 24,
+        opacity: 0.4
+      }}>
+        <a href="https://github.com/Ligerx/serverless-stack-api">
+          <img src={githubIcon} />
+        </a>
+      </div>
     </div>
   );  
 }
