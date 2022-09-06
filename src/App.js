@@ -77,7 +77,7 @@ function App(props) {
         opacity: 0.4
       }}>
         <a href="https://github.com/Ligerx/serverless-stack-api">
-          <img src={githubIcon} />
+          <img src={githubIcon} alt="GitHub" />
         </a>
       </div>
     </div>
